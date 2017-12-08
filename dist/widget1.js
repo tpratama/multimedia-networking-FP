@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    console.log('RUN');
     window.enableAdapter = true; // enable adapter.js
 
     // ......................................................
@@ -6,7 +7,9 @@ $(document).ready(function() {
     // ......................................................
     var connection = new RTCMultiConnection();
     // by default, socket.io server is assumed to be deployed on your own URL
-    connection.socketURL = 'http://localhost:9001/';
+
+    var baseUrl = $('ConferenceWidget').attr('base-url');
+    connection.socketURL = baseUrl + '/';
     // comment-out below line if you do not have your own socket.io server
     // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
     connection.socketMessageEvent = 'video-conference-demo';
@@ -18,8 +21,7 @@ $(document).ready(function() {
         OfferToReceiveAudio: true,
         OfferToReceiveVideo: true
     };
-    connection.videosContainer = document.getElementById('videos-container');
-    console.log(connection.videosContainer);
+    connection.videosContainer = $('#videos-container')[0];
     connection.onstream = function(event) {
         var existing = document.getElementById(event.streamid);
         if(existing && existing.parentNode) {
@@ -52,37 +54,8 @@ $(document).ready(function() {
             mediaElement.parentNode.removeChild(mediaElement);
         }
     };
-    // ......................................................
-    // ......................Handling Room-ID................
-    // ......................................................
-
-    (function() {
-        var params = {},
-            r = /([^&=]+)=?([^&]*)/g;
-        function d(s) {
-            return decodeURIComponent(s.replace(/\+/g, ' '));
-        }
-        var match, search = window.location.search;
-        while (match = r.exec(search.substring(1)))
-            params[d(match[1])] = d(match[2]);
-        window.params = params;
-    })();
 
     (function(roomid) {
-        console.log(roomid);
-        if (localStorage.getItem(connection.socketMessageEvent)) {
-            roomid = localStorage.getItem(connection.socketMessageEvent);
-        } else {
-            roomid = connection.token();
-        }
-
-        var hashString = location.hash.replace('#', '');
-        if (hashString.length && hashString.indexOf('comment-') == 0) {
-            hashString = '';
-        }
-        if (!roomid && hashString.length) {
-            roomid = hashString;
-        }
         if (roomid && roomid.length) {
             localStorage.setItem(connection.socketMessageEvent, roomid);
             // auto-join-room
