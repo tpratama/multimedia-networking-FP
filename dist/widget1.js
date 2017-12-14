@@ -12,7 +12,7 @@ $(document).ready(function() {
     // ..................RTCMultiConnection Code.............
     // ......................................................
 
-    var socket_pesan = io.connect('http://10.151.37.40:9002');
+    var socket_pesan = io.connect('http://10.151.36.132:9002');
     var username_login = ""
 
     // on connection to server, ask for user's name with an anonymous callback

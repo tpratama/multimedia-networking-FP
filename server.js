@@ -106,16 +106,21 @@ function serverHandler(request, response) {
                 'Content-Type': 'text/html'
             });
 
-            if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
-                filename = filename.replace(resolveURL('/demos/MultiRTC/'), '');
-                filename += resolveURL('/demos/MultiRTC/index.html');
-            } else if (filename.indexOf(resolveURL('/demos')) !== -1) {
-                filename = filename.replace(resolveURL('/demos/'), '');
-                filename = filename.replace(resolveURL('/demos'), '');
-                filename += resolveURL('/demos/index.html');
-            } else {
-                filename += resolveURL('/demos/index.html');
-            }
+            // if (filename.indexOf(resolveURL('/kelas')) !== -1) {
+            //     filename = filename.replace(resolveURL('/kelas'), '');
+            //     filename += resolveURL('/views/kelas.html');
+            // } else {
+                if (filename.indexOf(resolveURL('/demos/MultiRTC/')) !== -1) {
+                    filename = filename.replace(resolveURL('/demos/MultiRTC/'), '');
+                    filename += resolveURL('/demos/MultiRTC/index.html');
+                } else if (filename.indexOf(resolveURL('/demos')) !== -1) {
+                    filename = filename.replace(resolveURL('/demos/'), '');
+                    filename = filename.replace(resolveURL('/demos'), '');
+                    filename += resolveURL('/demos/index.html');
+                } else {
+                    filename += resolveURL('/demos/index.html');
+                }
+            // }
         }
 
         var contentType = 'text/plain';
@@ -299,7 +304,7 @@ function runServer() {
             hostQuery.isHostWhitelisted(baseUrl)
                 .then((whiteListed) => {
                     if (!whiteListed) {
-                        socket.disconnect();
+                        //socket.disconnect();
                     }
                 });
 
