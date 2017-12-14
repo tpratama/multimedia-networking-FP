@@ -21,7 +21,20 @@ $(document).ready(function() {
         OfferToReceiveAudio: true,
         OfferToReceiveVideo: true
     };
-    connection.videosContainer = $('#videos-container')[0];
+    
+
+    var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
+    var mainContainer = $(`<div style="display:block; width: ${width};"></div>`);
+    var userContainer = $(`<div id="video-item-user" style="width: ${width};"></div>`);
+    var clientsContainer = $(`<div id="video-item" style="height: auto; width: 800px;"></div>`);
+
+    mainContainer.append(userContainer[0]);
+    mainContainer.append(clientsContainer[0]);
+
+    $('#videos-container')[0].append(mainContainer[0]);
+
+    connection.videosContainer = $('#video-item')[0];
+    connection.userVideoContainer = $('#video-item-user')[0];
     connection.onstream = function(event) {
         var existing = document.getElementById(event.streamid);
         if(existing && existing.parentNode) {
@@ -35,14 +48,28 @@ $(document).ready(function() {
             video.muted = true;
         }
         video.srcObject = event.stream;
-        var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
+        var width = 800;
+        var roomid = $('ConferenceWidget').attr('room-id');
+
+        if (event.userid != roomid) {
+            width = 200;
+        }
+
+        console.log(event.userid);
         var mediaElement = getHTMLMediaElement(video, {
             title: event.userid,
             buttons: ['full-screen'],
             width: width,
             showOnMouseEnter: false
         });
-        connection.videosContainer.appendChild(mediaElement);
+
+        if (event.userid == roomid) {
+            connection.userVideoContainer.appendChild(mediaElement);    
+        }
+        else {
+            connection.videosContainer.appendChild(mediaElement);            
+        }
+
         setTimeout(function() {
             mediaElement.media.play();
         }, 5000);
@@ -70,4 +97,4 @@ $(document).ready(function() {
             })();
         }
     })($('ConferenceWidget').attr('room-id'));
-});
+}); 
