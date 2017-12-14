@@ -24,11 +24,37 @@ $(document).ready(function() {
     
 
     var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
-    var mainContainer = $(`<div style="display:block; width: ${width};"></div>`);
-    var userContainer = $(`<div id="video-item-user" style="width: ${width};"></div>`);
-    var clientsContainer = $(`<div id="video-item" style="height: auto; width: 800px;"></div>`);
+    var mainContainer = $(`<div style="display:block;" class="row"></div>`);
+    var userContainer = $(`<div class="col-md-8" id="video-item-user" style="background:red;"></div>`);
+    var chatContainer = $(`<div class="col-md-4" style="background: yellow">
+                                <h3>Chat</h3>
+                                <div id="message" style="padding:10px; height: 400px;  overflow-y: scroll;">
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                    <p>Hello</p>
+                                </div>
+                                <form>
+                                    <div class="form-group">
+                                        <input placeholder="Pesan" id="pesan" class="form-control" type="text">
+                                    </div>
+                                    <button style="float:right" type="button" id="button-kirim" class="btn btn-primary">Kirim</button>
+                                </form>
+                                </div>`);
+    var clientsContainer = $(`<div id="video-item" style="background:green; height: auto; width: 800px;"></div>`);
 
     mainContainer.append(userContainer[0]);
+    mainContainer.append(chatContainer[0]);
     mainContainer.append(clientsContainer[0]);
 
     $('#videos-container')[0].append(mainContainer[0]);
