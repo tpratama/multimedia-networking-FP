@@ -1,3 +1,9 @@
+
+
+
+
+
+
 $(document).ready(function() {
     console.log('RUN');
     window.enableAdapter = true; // enable adapter.js
@@ -5,6 +11,24 @@ $(document).ready(function() {
     // ......................................................
     // ..................RTCMultiConnection Code.............
     // ......................................................
+
+    var socket_pesan = io.connect('http://10.151.37.40:9002');
+    var username_login = ""
+
+    // on connection to server, ask for user's name with an anonymous callback
+    socket_pesan.on('connect', function(){
+
+        var room_id = $('ConferenceWidget').attr('room-id');
+        // call the server-side function 'adduser' and send one parameter (value of prompt)
+        username_login = prompt("What's your name?");
+
+        var data_user = {username: username_login, room: room_id}
+        socket_pesan.emit('adduser', data_user);
+    });
+
+    
+
+
     var connection = new RTCMultiConnection();
     // by default, socket.io server is assumed to be deployed on your own URL
 
@@ -29,27 +53,14 @@ $(document).ready(function() {
     var chatContainer = $(`<div class="col-md-4" style="background: yellow">
                                 <h3>Chat</h3>
                                 <div id="message" style="padding:10px; height: 400px;  overflow-y: scroll;">
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
-                                    <p>Hello</p>
+                                    
                                 </div>
-                                <form>
+                              
                                     <div class="form-group">
-                                        <input placeholder="Pesan" id="pesan" class="form-control" type="text">
+                                        <input placeholder="Pesan" id="data" class="form-control" type="text">
                                     </div>
-                                    <button style="float:right" type="button" id="button-kirim" class="btn btn-primary">Kirim</button>
-                                </form>
+                                    <button style="float:right" type="button" id="datasend" class="btn btn-primary">Kirim</button>
+                           
                                 </div>`);
     var clientsContainer = $(`<div id="video-item" style="background:green; height: auto; width: 800px;"></div>`);
 
@@ -123,4 +134,33 @@ $(document).ready(function() {
             })();
         }
     })($('ConferenceWidget').attr('room-id'));
+
+        $('#datasend').click( function() {
+            var message = $('#data').val();
+            $('#data').val('');
+           // alert(message);
+            // tell server to execute 'sendchat' and send along one parameter
+            socket_pesan.emit('sendchat', message);
+        });
+
+        // when the client hits ENTER on their keyboard
+        $('#data').keypress(function(e) {
+            if(e.which == 13) {
+                $(this).blur();
+                $('#datasend').focus().click();
+            }
+        });
+
+
+        socket_pesan.on('updatechat', function (username, data) {
+            var align = 'align="right"'
+
+            if(username != username_login)
+            {
+                align = "";
+            }
+
+           $('#message').append('<p '+align+' ><b>'+username + ':</b> ' + data + '</p>');
+            //$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+        });
 }); 
