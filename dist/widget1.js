@@ -49,8 +49,8 @@ $(document).ready(function() {
 
     var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
     var mainContainer = $(`<div style="display:block;" class="row"></div>`);
-    var userContainer = $(`<div class="col-md-8" id="video-item-user" style="background:red;"></div>`);
-    var chatContainer = $(`<div class="col-md-4" style="background: yellow">
+    var userContainer = $(`<div class="col-md-8" id="video-item-user"></div>`);
+    var chatContainer = $(`<div class="col-md-4">
                                 <h3>Chat</h3>
                                 <div id="message" style="padding:10px; height: 400px;  overflow-y: scroll;">
                                     
