@@ -1,6 +1,11 @@
 // Muaz Khan      - www.MuazKhan.com
 // MIT License    - www.WebRTC-Experiment.com/licence
 // Documentation  - github.com/muaz-khan/RTCMultiConnection
+require('./models/connection');
+
+const _ = require('lodash');
+const hostQuery = require('./models/queries/host-query');
+
 
 function resolveURL(url) {
     var isWin = !!process.platform.match(/^win/);
@@ -283,15 +288,20 @@ function runServer() {
 
     require('./Signaling-Server.js')(app, function(socket) {
         try {
+            
             var params = socket.handshake.query;
+            var referer = socket.handshake.headers.referer;
 
-            // "socket" object is totally in your own hands!
-            // do whatever you want!
+            var baseUrl = referer.split('/')[2];
 
-            // in your HTML page, you can access socket as following:
-            // connection.socketCustomEvent = 'custom-message';
-            // var socket = connection.getSocket();
-            // socket.emit(connection.socketCustomEvent, { test: true });
+            console.log(baseUrl);
+
+            hostQuery.isHostWhitelisted(baseUrl)
+                .then((whiteListed) => {
+                    if (!whiteListed) {
+                        socket.disconnect();
+                    }
+                });
 
             if (!params.socketCustomEvent) {
                 params.socketCustomEvent = 'custom-message';
@@ -302,6 +312,15 @@ function runServer() {
                     socket.broadcast.emit(params.socketCustomEvent, message);
                 } catch (e) {}
             });
+            // "socket" object is totally in your own hands!
+            // do whatever you want!
+
+            // in your HTML page, you can access socket as following:
+            // connection.socketCustomEvent = 'custom-message';
+            // var socket = connection.getSocket();
+            // socket.emit(connection.socketCustomEvent, { test: true });
+
+            
         } catch (e) {}
     });
 }
@@ -323,3 +342,4 @@ if (autoRebootServerOnFailure) {
 } else {
     runServer();
 }
+
