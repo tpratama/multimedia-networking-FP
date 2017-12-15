@@ -12,7 +12,7 @@ $(document).ready(function() {
     // ..................RTCMultiConnection Code.............
     // ......................................................
 
-    var socket_pesan = io.connect('http://10.151.36.132:9002');
+    var socket_pesan = io.connect('http://10.151.253.229:9002/');
     var username_login = ""
 
     // on connection to server, ask for user's name with an anonymous callback
@@ -62,7 +62,7 @@ $(document).ready(function() {
                                     <button style="float:right" type="button" id="datasend" class="btn btn-primary">Kirim</button>
                            
                                 </div>`);
-    var clientsContainer = $(`<div id="video-item" style="background:green; height: auto; width: 800px;"></div>`);
+    var clientsContainer = $(`<div id="video-item" style="height: auto; width: 800px;"></div>`);
 
     mainContainer.append(userContainer[0]);
     mainContainer.append(chatContainer[0]);
